@@ -1,0 +1,25 @@
+# syntax=docker/dockerfile:1.2
+
+FROM alpine:latest
+
+ENV install_dir /opt/go_sample
+ENV cmd_dir ${install_dir}/cmd
+ENV image_name go_sample
+ENV startup_script run.sh
+
+WORKDIR /
+RUN mkdir -p ${install_dir}
+RUN mkdir -p ${cmd_dir}
+
+COPY ${image_name} ${cmd_dir}/${image_name}
+COPY ${startup_script} ${install_dir}/${startup_script}
+
+
+ADD data.tar.gz ${install_dir}
+# RUN ls -lA ${install_dir}
+RUN ["ls", "/opt/go_sample", "-lAR"]
+
+RUN chmod -cR +x  ${install_dir}
+
+
+ENTRYPOINT ["sh", "/opt/go_sample/run.sh"] #WORKING

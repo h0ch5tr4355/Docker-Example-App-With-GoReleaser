@@ -1,0 +1,39 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    dir: cmd
+    main: helloworld.go
+    binary: go_sample
+    hooks:
+      pre:
+        - cmd: bash prebuild.sh
+          output: true
+      post:
+        - cmd: bash postbuild.sh
+          output: true
+archives:
+  - id: sample
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+dockers:
+  - image_templates:
+      # - "goreleaser_sample:{{ .Tag }}"
+      - "goreleaser_sample:latest"
+    skip_push: true
+    dockerfile: "Dockerfile.goreleaser_sample"
+    extra_files:
+      - run.sh
+      - data.tar.gz
