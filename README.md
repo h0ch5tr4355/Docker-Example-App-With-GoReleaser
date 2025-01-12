@@ -5,6 +5,7 @@ This is a sample Application, that shows how to create a small Go Application wr
 * Features:
     * Directories inside container
     * Metrics in an exposed webserver with expvar package (https://pkg.go.dev/expvar)
+    * Dockerfile with Delve and vscode launch settings.
 
 0. Get GoReleaser:
 
