@@ -5,5 +5,5 @@ if docker ps --format "{{.Names}}" --all | grep -q ${container_name}; then
     echo deleted
 fi
 
-docker run -d -p 8081:8080  --name ${container_name} goreleaser_sample
+docker run -d -p 8081:8080 -p 4000:4000  --name ${container_name} goreleaser_sample
 echo created

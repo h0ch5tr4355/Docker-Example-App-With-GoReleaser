@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1.2
 
-FROM alpine:latest
+#FROM alpine:latest
+FROM golang:1.23-alpine
+
+RUN CGO_ENABLED=0 go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
+
 
 ENV install_dir /opt/go_sample
 ENV cmd_dir ${install_dir}/cmd
@@ -15,11 +19,28 @@ COPY ${image_name} ${cmd_dir}/${image_name}
 COPY ${startup_script} ${install_dir}/${startup_script}
 
 
+
 ADD data.tar.gz ${install_dir}
 # RUN ls -lA ${install_dir}
 RUN ["ls", "/opt/go_sample", "-lAR"]
 
+RUN ls /opt/go_sample/cmd/go_sample -lAR
+
+RUN ls /
+
+RUN ls /opt/go_sample/cmd/ -lA
+
 RUN chmod -cR +x  ${install_dir}
 
+EXPOSE 80 4000
 
-ENTRYPOINT ["sh", "/opt/go_sample/run.sh"] #WORKING
+CMD [ "/go/bin/dlv", \
+ "--listen=:4000", \
+ "--headless=true", \
+ "--log=true", \
+ "--accept-multiclient", \
+ "--api-version=2", \
+ "exec", \
+ "/opt/go_sample/cmd/go_sample" \
+ ]
+#ENTRYPOINT ["sh", "/opt/go_sample/run.sh"] #WORKING

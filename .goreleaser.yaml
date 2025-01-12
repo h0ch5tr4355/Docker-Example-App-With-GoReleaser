@@ -8,6 +8,10 @@ builds:
     dir: cmd
     main: helloworld.go
     binary: go_sample
+    flags:
+      - "-gcflags=all=-N -l"
+    ldflags:
+      - "-X main.version={{.Version}}"
     hooks:
       pre:
         - cmd: bash prebuild.sh
